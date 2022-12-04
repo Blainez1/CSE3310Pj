@@ -68,7 +68,7 @@
         app:layout_constraintEnd_toEndOf="@+id/left_rectangle_accent"
         app:layout_constraintStart_toStartOf="@+id/left_rectangle_accent"
         app:layout_constraintTop_toTopOf="@+id/left_rectangle_accent"
-        app:queryHint="Search Receipes/Ingredients..." />
+        app:queryHint="Search Here"/>
 
 
     <ListView

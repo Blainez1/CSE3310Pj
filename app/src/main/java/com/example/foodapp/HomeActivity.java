@@ -149,9 +149,14 @@ public class HomeActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 if(Tab !=2){
+                    FavoriteFragment fFragment = new FavoriteFragment();
+                    Bundle recipeBundle = new Bundle();
+                    recipeBundle.putSerializable("recipeList", (Serializable) searchBar.get_recipe_list());
+
+                    fFragment.setArguments(recipeBundle);
                     getSupportFragmentManager().beginTransaction()
                             .setReorderingAllowed(true)
-                            .replace(R.id.fragmentContainer,FavoriteFragment.class,null)
+                            .replace(R.id.fragmentContainer,fFragment,null)
                             .commit();
 
                     //select other tabs except the fave tab if the tabs are not 1

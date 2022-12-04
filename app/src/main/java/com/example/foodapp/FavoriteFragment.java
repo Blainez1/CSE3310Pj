@@ -1,25 +1,19 @@
 package com.example.foodapp;
 
-import android.graphics.drawable.AnimationDrawable;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -37,14 +31,94 @@ public class FavoriteFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    //VARIABLES
-    ConstraintLayout constraintLayout;
-    AnimationDrawable animationDrawable;
-    Button cameraButton;
-    Button scanTextButton;
+    private ArrayList<Recipe> recipeList;
+    public Button textButton;
+    public Button scanButton;
 
     public FavoriteFragment() {
         // Required empty public constructor
+    }
+
+
+    public String[] parse_ingredient_list(String ingredients){
+        String[] ingredientList;
+        if(ingredients.indexOf(", ") != -1){
+            ingredientList = ingredients.split(", ");
+        }
+        else {
+            ingredientList = ingredients.split(" ");
+        }
+
+        for(int i = 0; i < ingredientList.length; i++){
+            if(ingredientList[i].contains("-")){
+                int index = ingredientList[i].indexOf("-");
+                char[] ingredientsCharArray = ingredientList[i].toCharArray();
+                ingredientsCharArray[index] = ' ';
+                String newName = String.valueOf(ingredientsCharArray);
+                ingredientList[i] = newName;
+            }
+
+            ingredientList[i] = ingredientList[i].toLowerCase();
+        }
+
+
+        return  ingredientList;
+    }
+
+    public int sum(ArrayList<Integer> numList){
+        int sum = 0;
+        for (int i : numList){
+            sum += i;
+        }
+        return sum;
+    }
+
+    public Recipe classify_ingredients(String ingredients, ArrayList<Recipe> recipeList){
+        String[] ingredientList = parse_ingredient_list(ingredients);
+
+        Recipe result;
+        ArrayList<Integer> scores = new ArrayList<Integer>();
+        for (Recipe recipe : recipeList){
+            ArrayList<Integer> numList = new ArrayList<Integer>();
+            for (String ingredient : ingredientList){
+                for(Ingredient ing : recipe.ingredientList){
+                    if(ingredient.equals(ing.name)){
+                        numList.add(1);
+                    }
+                    else{
+                        numList.add(0);
+                    }
+                }
+            }
+            scores.add(sum(numList));
+        }
+
+        int max = Collections.max(scores);
+        int argmax = scores.indexOf(max);
+
+        result = recipeList.get(argmax);
+
+        return result;
+    }
+
+    public ArrayList<Ingredient> missing_ingredients(Recipe result, String[] ingredientList){
+        ArrayList<Ingredient> missingIngredients = new ArrayList<>();
+        missingIngredients.addAll(result.ingredientList);
+        ArrayList<Ingredient> haveIngredients = new ArrayList<>();
+
+        for(String ingredient : ingredientList){
+            for(Ingredient ing : result.ingredientList){
+                if(ingredient.equals(ing.name)){
+                    haveIngredients.add(ing);
+                    break;
+                }
+            }
+        }
+        for(Ingredient ing : haveIngredients){
+            missingIngredients.remove(ing);
+        }
+
+        return missingIngredients;
     }
 
     /**
@@ -65,6 +139,8 @@ public class FavoriteFragment extends Fragment {
         return fragment;
     }
 
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,30 +153,31 @@ public class FavoriteFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        //View view = inflater.inflate(R.layout.fragment_favorite,container,false);
-        //cameraButton = view.findViewById(R.id.camera);
-        //constraintLayout = view.findViewById(R.id.Favorite);
+        View fragmentView = inflater.inflate(R.layout.fragment_favorite, container, false);
+        recipeList = new ArrayList<>();
+        Bundle b = this.getArguments();
+        if(b.getSerializable("recipeList") != null)
+            recipeList = (ArrayList<Recipe>)b.getSerializable("recipeList");
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_favorite, container, false);
+        System.out.println("Map in fragment: "+recipeList.toString());
+        return fragmentView;
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState)
-    {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){
+        textButton = (Button) view.findViewById(R.id.textButton);
+        scanButton = (Button) view.findViewById(R.id.scanButton);
 
-        //ASSIGNMENTS
-        //constraintLayout = view.findViewById(R.id.Favorite);
-        //animationDrawable = (AnimationDrawable) constraintLayout.getBackground();
-
-        //CHANGE VALUES FOR BACKGROUND
-        //animationDrawable.setEnterFadeDuration(2500);
-        //animationDrawable.setExitFadeDuration(5000);
-        //animationDrawable.start();
-
-
-
-
+        //open text prompt for the text button
+        textButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openIngredientPrompt();
+            }
+        });
     }
-
-
+    public void openIngredientPrompt(){
+        Intent intent = new Intent(getActivity(), textPromptActivity.class);
+        startActivity(intent);
+    }
 }

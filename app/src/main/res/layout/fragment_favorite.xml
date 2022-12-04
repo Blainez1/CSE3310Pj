@@ -4,51 +4,42 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradient_list"
-    android:id="@+id/Favorite"
+    android:background="@color/Favorites"
     tools:context=".FavoriteFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
-            android:layout_width="323dp"
-            android:layout_height="254dp"
-            android:orientation="vertical"
+        <Button
+            android:id="@+id/textButton"
+            android:layout_width="191dp"
+            android:layout_height="55dp"
+            android:background="@drawable/login_button_background"
+            android:fontFamily="@font/bs_bold"
             android:gravity="center"
+            android:text="TEXT"
+
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.377" />
 
-            <android.widget.Button
-                android:id="@+id/camera"
-                android:layout_width="229dp"
-                android:layout_height="88dp"
-                android:background="@drawable/blue_button_background"
-                android:fontFamily="@font/bs_bold"
-                android:gravity="center"
-                android:text="CAMERA"
-                android:textColor="@color/black"
-                android:textSize="29dp"
+        <Button
+            android:id="@+id/scanButton"
+            android:layout_width="195dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="60dp"
+            android:background="@drawable/login_button_background"
+            android:fontFamily="@font/bs_bold"
+            android:gravity="center"
+            android:text="SCAN"
 
-                />
-
-            <android.widget.Button
-                android:id="@+id/textToScan"
-                android:layout_width="229dp"
-                android:layout_height="88dp"
-                android:layout_marginTop="60dp"
-                android:background="@drawable/login_button_background"
-                android:fontFamily="@font/bs_bold"
-                android:gravity="center"
-                android:text="TEXT TO SCAN"
-                android:textSize="25dp"
-                android:textColor="@color/black"
-                />
-
-        </LinearLayout>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textButton" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

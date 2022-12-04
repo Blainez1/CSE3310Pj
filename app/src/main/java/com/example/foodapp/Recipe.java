@@ -18,9 +18,10 @@ public class Recipe{
 
     private String imagePath;
 
+
     public Recipe(String[] recipeText){
         this.recipeText = recipeText;
-        this.imagePath = imagePath;
+        //this.imagePath = imagePath;
         read_recipe();
     }
 
@@ -82,11 +83,6 @@ public class Recipe{
     }
     public void add_instruction(String line){
         instructions.add(line);
-    }
-
-    public String getInfoFromRecipe()
-    {
-        return this.recipeName;
     }
 
 
